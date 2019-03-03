@@ -130,7 +130,25 @@ scaleValue = rectInfo.width / lastRectInfo.width
 
 至于放大后的图片恢复到小图这一个阶段，可以看成是另外一个 `FLIP`动画，继续套用即可，只不过这个动画就是上一个放大动画的逆向，所需的尺寸和位置信息都已经拿到了，可以省去调用 `getBoundingClientRect`的过程
 
-同样做了个 [Live Demo](https://accforgit.github.io/flip/index.html?showIndex=1)，有兴趣的可以亲自试下，另外代码也可以上传到 [Github](https://github.com/accforgit/blog-data/blob/master/FLIP/src/components/Preview/index.js)
+同样做了个 [Live Demo](https://accforgit.github.io/flip/index.html?showIndex=1)，有兴趣的可以亲自试下，另外代码也已经上传到 [Github](https://github.com/accforgit/blog-data/blob/master/FLIP/src/components/Preview/index.js)
+
+## 为什么要用FLIP
+
+有些人可能比较疑惑，如果想要实现动画的话，直接 `transform`不就好了，为什么要多此一举搞个 `FLIP`的概念出来？
+
+我一开始也有这个疑惑，但是当我实际实现一个动画的时候，比如开头的那个卡片动画，这个疑问就立即得到了解答。
+
+对于一些动画，你明确的知道它的初始态(`First`)和结束态（`Last`），比如你就想让一个元素从 `left:10px;`移动到 `left:100px;`，那么你直接 `transform`就好了，根本没必要 `FLIP`，用了反而多此一举；
+
+但除此之外，还有一部分你无法明确的初始态(`First`)或结束态（`Last`）的动画，比如开头那个卡片动画，除非你限定死了每个卡片的尺寸以及整体页面的尺寸，否则你无法明确当你任意插入或者删除了某个卡片之后，其他卡片应当在什么位置。
+
+比如，在你的浏览器下，每个卡片宽高都是 100，浏览器页面宽度为 1380,所以每一列可以排布 13个卡片，但这只是在你的浏览器上，用户的浏览器页面宽度可能是 1280，也可能是1980，每一列排布的卡片数量可能是12也可能是19，不一而足，甚至你还可以任意 `resize`页面的尺寸，那么这个时候，你怎么确定每个时刻所有卡片 `last`状态的信息？
+
+你可能会说，我当然不知道，但是我可以使用浏览器 `API`进行测量啊。
+
+不好意思，这正是 `FLIP`要做的事情之一，你还是在无意识地情况下用到了这个东西，只不过相对于被前人总结并优化后的 `FLIP`来说，你的整体用法可能更零散更不规范一些。
+
+就像标题说的那样，`让动画变得更简单`，你可以不用，但是如果你知道怎么用了，那么动画对于你来说就是一个公式一把梭，更 `easy`。
 
 ## 小结
 
